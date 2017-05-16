@@ -81,4 +81,12 @@ class NativeQueryTest extends TestSuite {
     Cart.all.foreach(c => assert(c.name === "test"))
   }
 
+  test("execute statement") {
+    val sql = "SHOW TABLES;"
+    val results = NativeQuery(TestSchema).execute(sql) { rs =>
+      println(s"${rs.getString(1)} ${rs.getString(2)}")
+    }
+    assert(results != null)
+  }
+
 }

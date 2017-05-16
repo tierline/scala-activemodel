@@ -1,9 +1,7 @@
 package com.tierline.scala.activemodel.multitenant
 
-import com.mchange.v2.c3p0.ComboPooledDataSource
+
 import scala.util.DynamicVariable
-import javax.sql.DataSource
-import scala.tools.scalap.scalax.util.StringUtil
 
 trait MultiTenantFinder {
 
@@ -26,13 +24,13 @@ object MultiTenant {
     case None => throw new IllegalStateException(s"is not set tenant agent")
   }
 
-  def scope(key: String)(fanc: => Unit) = {
+  def scope(key: String)(func: => Unit) = {
     keyHolder.withValue(key) {
-      fanc
+      func
     }
   }
 
-  def isScope: Boolean = !keyHolder.value.isEmpty()
+  def isScope: Boolean = !keyHolder.value.isEmpty
 
   def outScope(f: => Unit) = {
     keyHolder.withValue("") {
@@ -44,9 +42,9 @@ object MultiTenant {
 
 case class MultiTenant(user: String, password: String, schema: String) {
 
-  def scope(fanc: => Unit) = {
+  def scope(func: => Unit) = {
     MultiTenant.scope(schema) {
-      fanc
+      func
     }
   }
 }

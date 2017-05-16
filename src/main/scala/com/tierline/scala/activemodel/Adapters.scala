@@ -3,9 +3,11 @@ package com.tierline.scala.activemodel
 import org.squeryl.adapters._
 import org.squeryl.internals.DatabaseAdapter
 import javax.sql.DataSource
+
 import com.mchange.v2.c3p0.ComboPooledDataSource
 import com.typesafe.config.Config
 import grizzled.slf4j.Logging
+import org.apache.commons.dbcp.BasicDataSource
 
 trait ActiveModelDatabaseAdapterSupport extends Logging {
   val url: String
@@ -24,6 +26,7 @@ trait ActiveModelDatabaseAdapterSupport extends Logging {
     ds.setUser(user)
     ds.setPassword(password)
     ds
+
   }
 
   def nativeQueryAdapter: NativeQueryAdapter = {
@@ -37,17 +40,42 @@ trait ActiveModelDatabaseAdapterSupport extends Logging {
 }
 
 abstract class ActiveModelDatabaseAdapter(conf: Config, val driver: String) extends ActiveModelDatabaseAdapterSupport {
-  val url: String = conf.getString("url")
+  val url: String = createUrl
   val user: String = conf.getString("user")
   val password: String = conf.getString("password")
   val dataSource: ComboPooledDataSource = createDateSource(url, driver, user, password)
+
+  protected def createUrl: String = conf.getString("url")
 }
+
+object SequentialActiveModelDatabaseAdapter {
+  var seq: Long = 0
+
+  def next: Long = {
+    seq.synchronized {
+      seq = seq + 1
+      seq
+    }
+  }
+}
+
+abstract class SequentialActiveModelDatabaseAdapter(conf: Config, driver: String) extends ActiveModelDatabaseAdapter(conf, driver) {
+  override def createUrl: String = {
+    conf.getString("url").replace("${schema}", s"db-${SequentialActiveModelDatabaseAdapter.next}")
+  }
+
+}
+
 
 case class MariaDB(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.mariadb.jdbc.Driver") {
   val adapter = new MySQLInnoDBAdapter
 }
 
 case class H2(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.h2.Driver") {
+  val adapter = new H2Adapter
+}
+
+case class H2Concurrent(conf: Config) extends SequentialActiveModelDatabaseAdapter(conf, "org.h2.Driver") {
   val adapter = new H2Adapter
 }
 

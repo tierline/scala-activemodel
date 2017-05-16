@@ -1,10 +1,12 @@
 package com.tierline.scala.activemodel
 
+import javax.sql.DataSource
+
 import org.squeryl._
 import org.squeryl.PrimitiveTypeMode._
 import com.mchange.v2.c3p0.ComboPooledDataSource
+import com.tierline.scala.activemodel.util.Companion
 import grizzled.slf4j.Logging
-import com.typesafe.config.ConfigFactory
 
 trait ActiveModelSchema extends Schema with Logging {
 
@@ -35,11 +37,11 @@ trait ActiveModelSchema extends Schema with Logging {
     this
   }
 
-  protected def createTable[T <: ActiveModelBase[_]](fanc: => Table[T])(implicit manifestT: Manifest[T]): Table[T] = {
-    Utils.companionOf[T] match {
+  protected def createTable[T <: ActiveModelBase[_]](func: => Table[T])(implicit manifestT: Manifest[T]): Table[T] = {
+    Companion.of[T] match {
       case Some(companion) => {
         val repo = companion.asInstanceOf[RepositoryBase[_, T]]
-        val t = fanc
+        val t = func
         repo.set(this, t)
         t
       }
@@ -48,12 +50,12 @@ trait ActiveModelSchema extends Schema with Logging {
   }
 
   override def drop() = inTransaction {
-    debug(s"Drop:${schemaName}")
+    debug(s"Drop:$schemaName")
     super.drop
   }
 
   override def create() = inTransaction {
-    debug(s"Create:${schemaName}")
+    debug(s"Create:$schemaName")
     printDdl
     super.create
   }

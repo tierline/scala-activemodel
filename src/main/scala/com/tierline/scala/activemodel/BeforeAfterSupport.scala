@@ -14,9 +14,9 @@ trait SaveBeforeAfterSupport extends ActiveModel {
   @Transient
   protected var afterSaveFanc: Option[() => Unit] = None
 
-  protected def beforeSave(fanc: => Unit) = beforeSaveFanc = Some(fanc _)
+  protected def beforeSave(func: => Unit) = beforeSaveFanc = Some(func _)
 
-  protected def afterSave(fanc: => Unit) = afterSaveFanc = Some(fanc _)
+  protected def afterSave(func: => Unit) = afterSaveFanc = Some(func _)
 
   override def create(): this.type = {
     inTransaction {
@@ -55,18 +55,18 @@ trait UpdateBeforeAfterSupport extends ActiveModel {
   @Transient
   protected var afterUpdateFanc: Option[() => Unit] = None
 
-  protected def beforeUpdate(fanc: => Unit) = beforeUpdateFanc = Some(fanc _)
+  protected def beforeUpdate(func: => Unit) = beforeUpdateFanc = Some(func _)
 
-  protected def afterUpdate(fanc: => Unit) = afterUpdateFanc = Some(fanc _)
+  protected def afterUpdate(func: => Unit) = afterUpdateFanc = Some(func _)
 
   @Transient
   protected var beforeUpdatePartialFanc: Option[() => Unit] = None
   @Transient
   protected var afterUpdatePartialFanc: Option[() => Unit] = None
 
-  protected def beforeUpdatePartial(fanc: => Unit) = beforeUpdatePartialFanc = Some(fanc _)
+  protected def beforeUpdatePartial(func: => Unit) = beforeUpdatePartialFanc = Some(func _)
 
-  protected def afterUpdatePartial(fanc: => Unit) = afterUpdatePartialFanc = Some(fanc _)
+  protected def afterUpdatePartial(func: => Unit) = afterUpdatePartialFanc = Some(func _)
 
   override def update(): this.type = {
     inTransaction {
@@ -83,13 +83,13 @@ trait UpdateBeforeAfterSupport extends ActiveModel {
     this
   }
 
-  override def updatePartial(fanc: this.type => UpdateAssignment): this.type = {
+  override def updatePartial(func: this.type => UpdateAssignment): this.type = {
     inTransaction {
       beforeUpdatePartialFanc match {
         case Some(f) => f()
         case None =>
       }
-      super.updatePartial(fanc)
+      super.updatePartial(func)
       afterUpdatePartialFanc match {
         case Some(f) => f()
         case None =>
@@ -105,9 +105,9 @@ trait DeleteBeforeAfterSupport extends ActiveModel {
   @Transient
   protected var afterDeleteFanc: Option[() => Unit] = None
 
-  protected def beforeDelete(fanc: => Unit) = beforeDeleteFanc = Some(fanc _)
+  protected def beforeDelete(func: => Unit) = beforeDeleteFanc = Some(func _)
 
-  protected def afterDelete(fanc: => Unit) = afterDeleteFanc = Some(fanc _)
+  protected def afterDelete(func: => Unit) = afterDeleteFanc = Some(func _)
 
   override def delete(): Boolean = {
     inTransaction {

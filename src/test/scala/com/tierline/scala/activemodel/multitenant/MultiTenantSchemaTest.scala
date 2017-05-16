@@ -6,10 +6,8 @@ import org.squeryl.PrimitiveTypeMode._
 
 import com.tierline.scala.activemodel.Database
 import com.tierline.scala.activemodel.domain._
-import com.tierline.sails.servicelocator.logging.Slf4jLogger
 
-class MultiTenantSchemaTest extends FunSuite with BeforeAndAfterAll with BeforeAndAfter with Slf4jLogger {
-
+class MultiTenantSchemaTest extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
   override def beforeAll {
     Database.setSchema(CentralSchema, MultiTenantSchema)
     MultiTenant(Tenant)

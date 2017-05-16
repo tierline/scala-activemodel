@@ -2,7 +2,7 @@
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<Target>System.out</Target>
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+			<Pattern>%d{HH:mm:ss} %-5level %logger{36} - %msg%n</Pattern>
 		</layout>
 	</appender>
 
@@ -10,7 +10,9 @@
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</root>
-	<logger name="com.mchange.v2" level="INFO" />
+	<logger name="ch.qos.logback.classic" level="OFF"/>
+	<logger name="com.tierline.scala.activemodel.domain" level="OFF"/>
+	<logger name="com.mchange.v2" level="OFF"/>
 </configuration>
 
 <!-- 

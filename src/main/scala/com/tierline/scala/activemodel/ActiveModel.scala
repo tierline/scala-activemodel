@@ -6,6 +6,8 @@ import org.squeryl.dsl.ast.UpdateAssignment
 import grizzled.slf4j.Logging
 import org.squeryl.dsl.ast.LogicalBoolean
 import java.sql.SQLException
+
+import com.tierline.scala.activemodel.util.Companion
 import org.squeryl.annotations.Transient
 
 trait ActiveModel extends ActiveModelBase[Long] {
@@ -35,7 +37,7 @@ trait ActiveModelCRUD {
 
   def update(): this.type
 
-  def updatePartial(fanc: this.type => UpdateAssignment): this.type
+  def updatePartial(func: this.type => UpdateAssignment): this.type
 }
 
 trait ActiveModelBase[K] extends KeyedEntity[K] with Logging with ActiveModelCRUD {
@@ -43,7 +45,7 @@ trait ActiveModelBase[K] extends KeyedEntity[K] with Logging with ActiveModelCRU
   protected val repository: RepositoryBase[K, _]
 
   @Transient
-  protected lazy val companion = Utils.companionOf[this.type].getOrElse(throw new IllegalAccessException(s"Can't get companion object"))
+  protected lazy val companion = Companion.of[this.type].getOrElse(throw new IllegalAccessException(s"Can't get companion object"))
   @Transient
   protected lazy val schema = repository.schema
   @Transient

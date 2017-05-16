@@ -6,9 +6,8 @@ import org.squeryl.PrimitiveTypeMode._
 
 import com.tierline.scala.activemodel.Database
 import com.tierline.scala.activemodel.domain._
-import com.tierline.sails.servicelocator.logging.Slf4jLogger
 
-class MultiTenantActiveModelTest extends FunSuite with BeforeAndAfterAll with BeforeAndAfter with Slf4jLogger {
+class MultiTenantModeTest extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
 
   val tenantKey = "tenant-1"
 
@@ -58,7 +57,7 @@ class MultiTenantActiveModelTest extends FunSuite with BeforeAndAfterAll with Be
     savedEntity.delete()
 
     Cart.findById(id) match {
-      case Some(g) => assert(false)
+      case Some(g) => fail()
       case None => assert(true)
     }
   }
@@ -68,14 +67,14 @@ class MultiTenantActiveModelTest extends FunSuite with BeforeAndAfterAll with Be
     val id = savedEntity.id
     savedEntity.name = "new name"
     savedEntity.size = 2000
-    savedEntity.update
+    savedEntity.update()
 
     Cart.findById(id) match {
       case Some(g) => {
         assert(g.name == "new name")
         assert(g.size == 2000)
       }
-      case None => assert(false)
+      case None => fail()
     }
   }
 
@@ -90,7 +89,7 @@ class MultiTenantActiveModelTest extends FunSuite with BeforeAndAfterAll with Be
       case Some(g) => {
         assert(g.name == "new name")
       }
-      case None => assert(false)
+      case None => fail()
     }
 
   }

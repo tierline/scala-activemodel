@@ -1,9 +1,9 @@
-package com.tierline.scala.activemodel
+package com.tierline.scala.activemodel.util
 
 import grizzled.slf4j.Logging
 
-object Utils extends Logging {
-  def companionOf[T: Manifest]: Option[AnyRef] = try {
+object Companion extends Logging {
+  def of[T: Manifest]: Option[AnyRef] = try {
     val classOfT = implicitly[Manifest[T]].runtimeClass
     val companionClassName = classOfT.getName + "$"
     val companionClass = Class.forName(companionClassName)

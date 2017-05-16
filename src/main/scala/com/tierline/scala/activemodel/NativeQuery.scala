@@ -12,9 +12,10 @@ object NativeQuery {
 
 case class NativeQuery(schema: ActiveModelSchema) extends Logging {
 
-  def using[Closeable <: {def close() : Unit}, B](closeable: Closeable)(fanc: Closeable => B): B = {
+
+  def using[Closeable <: {def close() : Unit}, B](closeable: Closeable)(func: Closeable => B): B = {
     try {
-      fanc(closeable)
+      func(closeable)
     } finally {
       closeable.close()
     }
@@ -24,9 +25,9 @@ case class NativeQuery(schema: ActiveModelSchema) extends Logging {
 
   import scala.collection.mutable.ListBuffer
 
-  def toList[T](exists: => Boolean)(fanc: => T): List[T] = {
+  def toList[T](exists: => Boolean)(func: => T): List[T] = {
     val buff = new ListBuffer[T]
-    while (exists) buff += fanc
+    while (exists) buff += func
     buff.toList
   }
 
@@ -83,6 +84,14 @@ case class NativeQuery(schema: ActiveModelSchema) extends Logging {
       using(con.createStatement) { statement =>
         debug("execute update:" + sql)
         statement.executeUpdate(sql)
+      }
+    }
+  }
+
+  def execute[T](sql: String)(resultToObj: ResultSet => T): Seq[T] = {
+    query(sql) { results =>
+      toList(results.next) {
+        resultToObj(results)
       }
     }
   }
