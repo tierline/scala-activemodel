@@ -1,21 +1,19 @@
-package com.tierline.scala.activemodel.domain
+package com.tierline.scala.activemodel.singletenant.domain
 
-import scala.util.DynamicVariable
-import org.squeryl.PrimitiveTypeMode._
 import com.tierline.scala.activemodel._
 import com.tierline.scala.activemodel.multitenant._
+import org.squeryl.PrimitiveTypeMode._
 
-object Tenant extends Repository[Tenant] with MultiTenantFinder {
-
+object SeparateTenant extends Repository[SeparateTenant] with MultiTenantFinder {
   def findById(key: String): Option[MultiTenant] = {
-    find(t => t.tenantSchemaName === key).toSeq.headOption match {
+    find(t => t.tenantSchemaName === key).headOption match {
       case Some(t) => Some(t.multiTenant)
       case None => None
     }
   }
 }
 
-case class Tenant(var id: Long, var tenantSchemaName: String) extends ActiveModel {
+case class SeparateTenant(var id: Long, var tenantSchemaName: String) extends ActiveModel {
 
   def this(name: String) {
     this(0, name)

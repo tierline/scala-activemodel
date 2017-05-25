@@ -3,16 +3,16 @@ package com.tierline.scala.activemodel
 import org.squeryl.Session
 import org.squeryl.SessionFactory
 import grizzled.slf4j.Logging
-import com.tierline.scala.activemodel.multitenant.MultiTenantActiveModelSchema
+import com.tierline.scala.activemodel.multitenant.MultitenancyActiveModelSchema
 import com.tierline.scala.activemodel.multitenant.MultiTenant
 
-object ActiveModelSessionFactory extends Logging {
+object OldActiveModelSessionFactory extends Logging {
 
   var multiTenancy = false
 
   var defaultSchema: Option[ActiveModelSchema] = None
 
-  var multiTenantSchema: Option[MultiTenantActiveModelSchema] = None
+  var multiTenantSchema: Option[MultitenancyActiveModelSchema] = None
 
   def defaultSession: () => Session = { () =>
     defaultSchema.getOrElse(throw new IllegalAccessException("デフォルトスキーマが設定されていません")).createSession
@@ -33,7 +33,7 @@ object ActiveModelSessionFactory extends Logging {
     SessionFactory.concreteFactory = Some(defaultSession)
   }
 
-  def setMultiTenant(schema: MultiTenantActiveModelSchema) {
+  def setMultiTenant(schema: MultitenancyActiveModelSchema) {
     multiTenantSchema = Some(schema)
     multiTenancy = true
     SessionFactory.concreteFactory = Some(multiSession)

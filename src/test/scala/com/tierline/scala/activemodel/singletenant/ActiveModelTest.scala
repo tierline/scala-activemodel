@@ -1,6 +1,7 @@
-package com.tierline.scala.activemodel
+package com.tierline.scala.activemodel.singletenant
 
-import com.tierline.scala.activemodel.domain._
+import com.tierline.scala.activemodel.TestSuite
+import com.tierline.scala.activemodel.singletenant.domain._
 
 
 class ActiveModelTest extends TestSuite {

@@ -1,6 +1,5 @@
 package com.tierline.scala.activemodel
 
-import javax.sql.DataSource
 
 import org.squeryl._
 import org.squeryl.PrimitiveTypeMode._
@@ -40,9 +39,8 @@ trait ActiveModelSchema extends Schema with Logging {
   protected def createTable[T <: ActiveModelBase[_]](func: => Table[T])(implicit manifestT: Manifest[T]): Table[T] = {
     Companion.of[T] match {
       case Some(companion) => {
-        val repo = companion.asInstanceOf[RepositoryBase[_, T]]
         val t = func
-        repo.set(this, t)
+        companion.asInstanceOf[RepositoryBase[_, T]].set(this, t)
         t
       }
       case None => throw new IllegalStateException(s"${manifestT.runtimeClass.getSimpleName}:コンパニオンオブジェクトが見つかりません")
@@ -77,10 +75,12 @@ trait ActiveModelSchema extends Schema with Logging {
     Session.create(dataSource.getConnection, databaseAdapter.adapter)
   }
 
-  def init() {
-    ActiveModelSessionFactory.setDefault(this)
+  def sessionFactory: () => Session = { () =>
+    this.createSession
   }
 
-  init()
+  def insert[K](table: Table[ActiveModelBase[K]], e: ActiveModelBase[K]) = {
+    table.insert(e)
+  }
 
 }

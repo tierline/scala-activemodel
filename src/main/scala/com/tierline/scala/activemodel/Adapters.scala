@@ -9,62 +9,7 @@ import com.typesafe.config.Config
 import grizzled.slf4j.Logging
 import org.apache.commons.dbcp.BasicDataSource
 
-trait ActiveModelDatabaseAdapterSupport extends Logging {
-  val url: String
-  val user: String
-  val password: String
-  val driver: String
-  val adapter: DatabaseAdapter
-  val dataSource: ComboPooledDataSource
 
-  def createDateSource(url: String, driver: String, user: String = "", password: String = ""): ComboPooledDataSource = {
-    logger.info("Creating connection with c3po connection pool")
-    Class.forName(driver)
-    val ds = new ComboPooledDataSource
-    ds.setJdbcUrl(url)
-    ds.setDriverClass(driver)
-    ds.setUser(user)
-    ds.setPassword(password)
-    ds
-
-  }
-
-  def nativeQueryAdapter: NativeQueryAdapter = {
-    adapter match {
-      case _: MySQLAdapter => MySqlDBAdapter
-      case _: H2Adapter => H2DBAdapter
-      case _: MSSQLServer => MSSqlAdapter
-      case _ => null
-    }
-  }
-}
-
-abstract class ActiveModelDatabaseAdapter(conf: Config, val driver: String) extends ActiveModelDatabaseAdapterSupport {
-  val url: String = createUrl
-  val user: String = conf.getString("user")
-  val password: String = conf.getString("password")
-  val dataSource: ComboPooledDataSource = createDateSource(url, driver, user, password)
-
-  protected def createUrl: String = conf.getString("url")
-}
-
-object SequentialActiveModelDatabaseAdapter {
-  var seq: Long = 0
-
-  def next: Long = {
-    seq.synchronized {
-      seq = seq + 1
-      seq
-    }
-  }
-}
-
-abstract class SequentialActiveModelDatabaseAdapter(conf: Config, driver: String) extends ActiveModelDatabaseAdapter(conf, driver) {
-  override def createUrl: String = {
-    conf.getString("url").replace("${schema}", s"db-${SequentialActiveModelDatabaseAdapter.next}")
-  }
-
-}
 
 
 case class MariaDB(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.mariadb.jdbc.Driver") {
@@ -72,10 +17,6 @@ case class MariaDB(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.m
 }
 
 case class H2(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.h2.Driver") {
-  val adapter = new H2Adapter
-}
-
-case class H2Concurrent(conf: Config) extends SequentialActiveModelDatabaseAdapter(conf, "org.h2.Driver") {
   val adapter = new H2Adapter
 }
 

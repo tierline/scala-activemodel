@@ -1,13 +1,11 @@
-package com.tierline.scala.activemodel
+package com.tierline.scala.activemodel.singletenant
 
-import org.scalatest.BeforeAndAfter
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.FunSuite
-import com.tierline.scala.activemodel.domain._
+import com.tierline.scala.activemodel.singletenant.domain.Cart
+import com.tierline.scala.activemodel.{EnvironmentConfigTestSchema, H2}
 import com.typesafe.config.ConfigFactory
+import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, FunSuite}
 import org.squeryl.PrimitiveTypeMode._
-import org.squeryl.SessionFactory
-import org.squeryl.Session
+import org.squeryl.{Session, SessionFactory}
 
 object Context {
 
@@ -16,13 +14,13 @@ object Context {
   def production(): Unit = {
     val dbConfig = config.getConfig("production")
     val schema = EnvironmentConfigTestSchema(H2(dbConfig))
-    Database.setSchema(schema)
+    ActiveModelSessionFactory.concreteFactory = schema.sessionFactory
+
   }
 
   def test(): Unit = {
     val dbConfig = config.getConfig("test")
     val schema = EnvironmentConfigTestSchema(H2(dbConfig))
-    Database.setSchema(schema)
   }
 }
 
@@ -31,8 +29,9 @@ class EnvironmentConfigTest extends FunSuite with BeforeAndAfterAll with BeforeA
   var session: Session = _
 
   override def afterAll {
+
     session.unbindFromCurrentThread
-    Database.close()
+    //    Database.close()
   }
 
   test("test") {
