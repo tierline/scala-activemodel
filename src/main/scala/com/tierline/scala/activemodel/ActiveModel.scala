@@ -1,11 +1,9 @@
 package com.tierline.scala.activemodel
 
 import org.squeryl._
-import org.squeryl.PrimitiveTypeMode._
-import org.squeryl.dsl.ast.UpdateAssignment
+import org.squeryl.PrimitiveTypeMode.{whereClause, _}
+import org.squeryl.dsl.ast.{LogicalBoolean, UpdateAssignment, UpdateStatement}
 import grizzled.slf4j.Logging
-import org.squeryl.dsl.ast.LogicalBoolean
-
 import com.tierline.scala.activemodel.util.Companion
 import org.squeryl.annotations.Transient
 
@@ -56,6 +54,36 @@ trait ActiveModelBase[K] extends KeyedEntity[K] with Logging with ActiveModelCRU
 
   protected val idWhereClause: ActiveModelBase[K] => LogicalBoolean
 
+  override def save(): Boolean = inTransaction {
+    table.insert(this) != null
+  }
+
+  override def create(): this.type = inTransaction {
+    table.insert(this)
+    this
+  }
+
+  override def delete(): Boolean = inTransaction {
+    table.delete(this.id)
+  }
+
+  override def update(): this.type = inTransaction {
+    table.update(this)
+    this
+  }
+
+
+  override def updatePartial(func: this.type => UpdateAssignment): this.type = {
+    executeReturnThis(s"Update Partial") { e =>
+      table.update(e => where(idWhereClause(this)) set func(e.asInstanceOf[this.type]))
+    }
+  }
+  
+  protected def executeReturnThis(debugMessage: String)(query: (this.type) => Unit): this.type = {
+    val isSuccess = execute(debugMessage)(e => query(this))
+    if (isSuccess) this else throw new ActiveModelException(s"Failure $debugMessage $tableName at $schemaName")
+  }
+
   protected def execute(debugMessage: String)(query: (this.type) => Unit): Boolean = inTransaction {
     var isSuccess = false
     try {
@@ -72,28 +100,7 @@ trait ActiveModelBase[K] extends KeyedEntity[K] with Logging with ActiveModelCRU
     isSuccess
   }
 
-  protected def executeReturnThis(debugMessage: String)(query: (this.type) => Unit): this.type = {
-    val isSuccess = execute(debugMessage)(e => query(e))
-    if (isSuccess) this else throw new ActiveModelException(s"Failure $debugMessage $tableName at $schemaName")
-  }
 
-  override def save(): Boolean = execute(s"Saved") {
-    e =>
-      schema.insert(table, e)
-    //      table.insert(e)
 
-  }
-
-  override def create(): this.type = executeReturnThis(s"Created") { e => table.insert(e) }
-
-  override def delete(): Boolean = execute(s"Deleted") { e => table.delete(e.id) }
-
-  override def update(): this.type = executeReturnThis(s"Updated") { e => table.update(e) }
-
-  override def updatePartial(func: this.type => UpdateAssignment): this.type = {
-    executeReturnThis(s"Update Partial") { e =>
-      table.update(e => where(idWhereClause(this)) set func(e.asInstanceOf[this.type]))
-    }
-  }
 
 }

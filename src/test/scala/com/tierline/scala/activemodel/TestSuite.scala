@@ -47,13 +47,25 @@ trait TestSuite extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
     println("#################################\n\n")
   }
 
-  def selectTable(table: String, id: Long, columns: Seq[String]): Map[String, String] = {
-    val tableMap = scala.collection.mutable.Map[String, String]()
+  def select(table: String, id: Long, columns: Seq[String]): Seq[Map[String, String]] = {
     val query = s"select * from $table where id = $id"
-    NativeQuery(schema).execute(query) {
+    val results = NativeQuery(schema).execute(query) {
       rs =>
+        val tableMap = scala.collection.mutable.Map[String, String]()
         columns.foreach(name => tableMap(name) = rs.getString(name))
+        tableMap.toMap
     }
-    tableMap.toMap
+    results
+  }
+
+  def selectHead(table: String, id: Long, columns: Seq[String]): Map[String, String] = {
+    val query = s"select * from $table where id = $id"
+    val results = NativeQuery(schema).execute(query) {
+      rs =>
+        val tableMap = scala.collection.mutable.Map[String, String]()
+        columns.foreach(name => tableMap(name) = rs.getString(name))
+        tableMap.toMap
+    }
+    results.head
   }
 }

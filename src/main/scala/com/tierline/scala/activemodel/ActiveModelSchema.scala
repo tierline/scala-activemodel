@@ -9,6 +9,7 @@ import grizzled.slf4j.Logging
 
 trait ActiveModelSchema extends Schema with Logging {
 
+
   var schemaName: String = getClass.getSimpleName.replace("$", "")
 
   var _databaseAdapter: Option[ActiveModelDatabaseAdapter] = None
@@ -79,8 +80,6 @@ trait ActiveModelSchema extends Schema with Logging {
     this.createSession
   }
 
-  def insert[K](table: Table[ActiveModelBase[K]], e: ActiveModelBase[K]) = {
-    table.insert(e)
-  }
+  def setLogger(debug: String) = Session.currentSession.setLogger(s => println(s"$debug $s"))
 
 }

@@ -1,33 +1,13 @@
 package com.tierline.scala.activemodel.multitenant.shared
 
-import com.tierline.scala.activemodel._
-import com.tierline.scala.activemodel.multitenant.shared.H2
-import com.tierline.scala.activemodel.multitenant.domain.{MultitenancyModel, _}
+import com.tierline.scala.activemodel.ActiveModelSchema
+import com.tierline.scala.activemodel.multitenant.domain._
 import com.typesafe.config.ConfigFactory
-import org.squeryl.{Session, Table}
+import org.squeryl.Session
 import org.squeryl.PrimitiveTypeMode._
-
-import scala.util.DynamicVariable
-
 
 object SharedSchema extends ActiveModelSchema {
 
-
-  //  override def insert[K](table: Table[ActiveModelBase[K]], e: ActiveModelBase[K]) = {
-  //    e match {
-  //      //      case tenantModel: MultitenancyModel => {
-  //      //        tenantModel.tenantId = currentTenant.value
-  //      //        table.insert(tenantModel)
-  //      //      }
-  //      case tenantModel: Channel => {
-  //        //        tenantModel.tenantId = currentTenant.value
-  //        table.insert(tenantModel)
-  //      }
-  //      case _ => {
-  //        table.insert(e)
-  //      }
-  //    }
-  //  }
 
   override def sessionFactory = { () =>
     Session.create(
@@ -48,7 +28,6 @@ object SharedSchema extends ActiveModelSchema {
   val comment = Table[Comment]
 
   val channelToComment = oneToManyRelation(channel, comment).via((ch, co) => ch.id === co.channelId)
-
 
   Multitenancy(channel)
 

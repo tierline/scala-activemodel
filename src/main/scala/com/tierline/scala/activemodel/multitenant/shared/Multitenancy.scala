@@ -8,18 +8,19 @@ import scala.util.DynamicVariable
 
 object Multitenancy {
 
+
   private val EMPTY_TENANT = "EMPTY_TENANT"
 
   private var hookTables = Set[Table[_]]()
 
   val currentTenant = new DynamicVariable[String]("EMPTY_TENANT")
 
-  def hook[T](table: Table[T]): Boolean = {
-    hookTables.contains(table)
-  }
-
   def apply[T](table: Table[T]): Unit = {
     this.hookTables = hookTables + table
+  }
+
+  def hook[T](table: Table[T]): Boolean = {
+    hookTables.contains(table)
   }
 
   def hook: Boolean = currentTenant.value != EMPTY_TENANT
@@ -32,5 +33,9 @@ object Multitenancy {
     }
     false
   }
+
+  def currentTenantValue: Option[String] = if (isEmpty) None else Some(this.currentTenant.value)
+
+  def isEmpty: Boolean = this.currentTenant.value.equals(EMPTY_TENANT)
 
 }

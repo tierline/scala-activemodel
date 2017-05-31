@@ -22,13 +22,12 @@ object Channel extends Repository[Channel] {
 
 case class Channel(
   var id: Long,
-  var name: String,
-  var size: Long) extends ActiveModel {
+  var name: String) extends ActiveModel {
 
 
-  def this() = this(0L, "", 0L)
+  def this() = this(0L, "")
 
-  def this(name: String, size: Long) = this(0L, name, size)
+  def this(name: String) = this(0L, name)
 
   lazy val comment: OneToMany[Comment] = SharedSchema.channelToComment.left(this)
 
