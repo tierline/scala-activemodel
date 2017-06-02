@@ -1,8 +1,8 @@
 package com.tierline.scala.activemodel
 
 import org.squeryl._
-import org.squeryl.PrimitiveTypeMode.{whereClause, _}
-import org.squeryl.dsl.ast.{LogicalBoolean, UpdateAssignment, UpdateStatement}
+import org.squeryl.PrimitiveTypeMode._
+import org.squeryl.dsl.ast.{LogicalBoolean, UpdateAssignment}
 import grizzled.slf4j.Logging
 import com.tierline.scala.activemodel.util.Companion
 import org.squeryl.annotations.Transient
@@ -75,7 +75,7 @@ trait ActiveModelBase[K] extends KeyedEntity[K] with Logging with ActiveModelCRU
 
   override def updatePartial(func: this.type => UpdateAssignment): this.type = {
     executeReturnThis(s"Update Partial") { e =>
-      table.update(e => where(idWhereClause(this)) set func(e.asInstanceOf[this.type]))
+      table.update(e => where(idWhereClause(e)) set func(e.asInstanceOf[this.type]))
     }
   }
   
@@ -99,8 +99,6 @@ trait ActiveModelBase[K] extends KeyedEntity[K] with Logging with ActiveModelCRU
     }
     isSuccess
   }
-
-
 
 
 }
