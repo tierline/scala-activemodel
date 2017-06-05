@@ -21,28 +21,10 @@ object Channel extends Repository[Channel] {
   }
 
   override def findById(id: Long): Option[Channel] = {
-
-    //    def ===[B](b: NumericalExpression[B]) = new EqualityExpression(this, b)
-
-
     val query = repo.where {
-      r =>
-        (r.id === id) and
-          (r.id === id)
+      r => (r.id === id)
     }
-    //    new NumericalExpression()
-
-    //    println(s"-------- ${query.statement}")
-
     query.toSeq.headOption
-
-
-    //
-    //    val r = from(repo) {
-    //      e =>
-    //        where()
-    //    }
-    //    debug(r.statement)
   }
 }
 
@@ -50,10 +32,16 @@ case class Channel(
   var id: Long,
   var name: String) extends ActiveModel {
 
+
   def this() = this(0L, "")
 
   def this(name: String) = this(0L, name)
 
-  lazy val comment: OneToMany[Comment] = SharedSchema.channelToComment.left(this)
+  lazy val comments: OneToMany[Comment] = SharedSchema.channelToComment.left(this)
+
+  def addComment(comment: Comment) = {
+    comment.channelId = this.id
+    comment.save()
+  }
 
 }

@@ -5,7 +5,7 @@ import com.tierline.scala.activemodel.multitenant.domain.{Channel, Tenant}
 class DeleteActiveModelTest extends ActiveModelTest {
 
   test("delete multitenancy model") {
-    val tenant = Tenant.findByName(tenantName).getOrElse(fail())
+    val tenant = mainTenant
 
     Multitenancy.currentTenant.withValue(tenant.tenantId) {
 
@@ -47,8 +47,6 @@ class DeleteActiveModelTest extends ActiveModelTest {
       val c = Channel.findById(fooChannelId).getOrElse(fail())
       assert(c.delete())
 
-      val mainC = Channel.findById(mainChannelId).getOrElse(fail())
-      assert(!mainC.delete())
     }
 
     Multitenancy.currentTenant.withValue(fooTenant.tenantId) {

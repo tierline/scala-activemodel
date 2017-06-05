@@ -8,16 +8,16 @@ object Comment extends Repository[Comment]
 
 case class Comment(
   var id: Long,
-  var name: String,
-  var price: Long) extends ActiveModel with MultitenancyModel {
+  var value: String) extends ActiveModel {
 
   var channelId: Long = _
 
-  def this() = this(0L, "", 0L)
+  def this() {
+    this(0L, "")
+  }
 
-  def this(cartId: Long) {
-    this()
-    this.channelId = cartId
+  def this(value: String) {
+    this(0L, value)
   }
 
   lazy val channel: ManyToOne[Channel] = SharedSchema.channelToComment.right(this)

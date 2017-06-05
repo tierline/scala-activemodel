@@ -6,7 +6,7 @@ class UpdateActiveModelTest extends ActiveModelTest {
 
   test("update multitenancy model") {
 
-    val tenant = Tenant.findByName(tenantName).getOrElse(fail())
+    val tenant = mainTenant
 
     val firstName = "foo"
     val secondName = "buzz"

@@ -29,7 +29,7 @@ object SharedSchema extends ActiveModelSchema {
 
   val channelToComment = oneToManyRelation(channel, comment).via((ch, co) => ch.id === co.channelId)
 
-  Multitenancy(channel)
+  Multitenancy(channel, comment)
 
   //
   //

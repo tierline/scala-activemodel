@@ -16,7 +16,7 @@ class InsertActiveModelTest extends ActiveModelTest {
   }
 
   test("save multitenancy model") {
-    val tenant = Tenant.findByName(tenantName).getOrElse(fail())
+    val tenant = mainTenant
 
     Multitenancy.currentTenant.withValue(tenant.tenantId) {
 
@@ -38,7 +38,7 @@ class InsertActiveModelTest extends ActiveModelTest {
 
 
   test("create multitenancy model") {
-    val tenant = Tenant.findByName(tenantName).getOrElse(fail())
+    val tenant = mainTenant
 
     Multitenancy.currentTenant.withValue(tenant.tenantId) {
 

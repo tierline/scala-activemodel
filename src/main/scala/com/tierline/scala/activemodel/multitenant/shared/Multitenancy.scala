@@ -1,26 +1,27 @@
 package com.tierline.scala.activemodel.multitenant.shared
 
+import com.tierline.scala.activemodel.{ActiveModel, ActiveModelBase}
 import org.squeryl.Table
 import org.squeryl.internals.StatementWriter
 
+import scala.collection.mutable
 import scala.util.DynamicVariable
 
 
 object Multitenancy {
 
-
   private val EMPTY_TENANT = "EMPTY_TENANT"
 
-  private var hookTables = Set[Table[_]]()
+  private val hookTables = mutable.HashSet[Table[ActiveModel]]()
 
   val currentTenant = new DynamicVariable[String]("EMPTY_TENANT")
 
-  def apply[T](table: Table[T]): Unit = {
-    this.hookTables = hookTables + table
+  def apply(tables: Table[_]*): Unit = {
+    tables.foreach(t => hookTables.add(t.asInstanceOf[Table[ActiveModel]]))
   }
 
-  def hook[T](table: Table[T]): Boolean = {
-    hookTables.contains(table)
+  def hook(table: Table[_]): Boolean = {
+    hookTables.contains(table.asInstanceOf[Table[ActiveModel]])
   }
 
   def hook: Boolean = currentTenant.value != EMPTY_TENANT
