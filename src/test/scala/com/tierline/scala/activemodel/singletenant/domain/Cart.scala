@@ -1,11 +1,8 @@
-package com.tierline.scala.activemodel.domain
+package com.tierline.scala.activemodel.singletenant.domain
 
+import com.tierline.scala.activemodel._
 import org.squeryl.PrimitiveTypeMode._
 import org.squeryl.dsl.OneToMany
-
-import com.tierline.scala.activemodel.ActiveModel
-import com.tierline.scala.activemodel.Repository
-import com.tierline.scala.activemodel.SaveBeforeAfterSupport
 
 object Cart extends Repository[Cart] {
 

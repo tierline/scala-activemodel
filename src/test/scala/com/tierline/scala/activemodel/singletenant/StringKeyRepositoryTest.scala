@@ -1,6 +1,7 @@
-package com.tierline.scala.activemodel
+package com.tierline.scala.activemodel.singletenant
 
-import com.tierline.scala.activemodel.domain.{Goods, KeyValue}
+import com.tierline.scala.activemodel.TestSuite
+import com.tierline.scala.activemodel.singletenant.domain.{Goods, KeyValue}
 import org.squeryl.PrimitiveTypeMode._
 
 class StringKeyRepositoryTest extends TestSuite {

@@ -1,6 +1,7 @@
-package com.tierline.scala.activemodel
+package com.tierline.scala.activemodel.singletenant
 
-import com.tierline.scala.activemodel.domain._
+import com.tierline.scala.activemodel.TestSuite
+import com.tierline.scala.activemodel.singletenant.domain._
 
 
 class ActiveModelTest extends TestSuite {
@@ -21,8 +22,19 @@ class ActiveModelTest extends TestSuite {
     savedEntity.delete()
 
     Cart.findById(id) match {
-      case Some(g) => assert(false)
-      case None => assert(true)
+      case Some(g) => fail()
+      case None => succeed
+    }
+  }
+
+  test("fail Delete") {
+    val savedEntity = new Cart("Note", 1000)
+    val id = 12
+    assert(false === savedEntity.delete())
+
+    Cart.findById(id) match {
+      case Some(g) => fail()
+      case None => succeed
     }
   }
 
@@ -37,7 +49,7 @@ class ActiveModelTest extends TestSuite {
       case Some(g) =>
         assert(g.name == "new name")
         assert(g.size == 2000)
-      case None => assert(false)
+      case None => fail()
     }
   }
 
@@ -51,9 +63,8 @@ class ActiveModelTest extends TestSuite {
     Cart.findById(id) match {
       case Some(g) =>
         assert(g.name == "new name")
-      case None => assert(false)
+      case None => fail()
     }
-
   }
 
 }

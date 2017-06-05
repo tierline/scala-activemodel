@@ -3,7 +3,7 @@ package com.tierline.scala.activemodel.collection
 import org.scalatest.FunSpec
 import org.squeryl._
 import org.squeryl.adapters.H2Adapter
-import com.tierline.scala.activemodel.domain._
+import com.tierline.scala.activemodel.singletenant.domain._
 import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.Level

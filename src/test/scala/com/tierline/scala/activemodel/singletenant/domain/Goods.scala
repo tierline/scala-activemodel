@@ -1,8 +1,7 @@
-package com.tierline.scala.activemodel.domain
-
-import org.squeryl.dsl.ManyToOne
+package com.tierline.scala.activemodel.singletenant.domain
 
 import com.tierline.scala.activemodel._
+import org.squeryl.dsl.ManyToOne
 
 object Goods extends Repository[Goods]
 
@@ -22,3 +21,4 @@ case class Goods(
 
   lazy val cart: ManyToOne[Cart] = TestSchema.cartToGoods.right(this)
 }
+

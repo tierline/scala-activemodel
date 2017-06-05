@@ -1,8 +1,7 @@
-package com.tierline.scala.activemodel.domain
+package com.tierline.scala.activemodel.singletenant.domain
 
+import com.tierline.scala.activemodel.{StringKeyActiveModel, StringKeyRepository}
 import org.squeryl.PrimitiveTypeMode._
-import com.tierline.scala.activemodel.StringKeyActiveModel
-import com.tierline.scala.activemodel.StringKeyRepository
 
 object KeyValue extends StringKeyRepository[KeyValue] {
   def countByValue(value: String): Long = {

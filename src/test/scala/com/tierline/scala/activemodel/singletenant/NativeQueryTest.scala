@@ -1,9 +1,7 @@
-package com.tierline.scala.activemodel
+package com.tierline.scala.activemodel.singletenant
 
-import com.tierline.scala.activemodel.domain.Cart
-import org.squeryl.PrimitiveTypeMode.transaction
-import NativeQuery._
-import com.tierline.scala.activemodel.domain.TestSchema
+import com.tierline.scala.activemodel.singletenant.domain.Cart
+import com.tierline.scala.activemodel.{NativeQuery, TestSchema, TestSuite}
 
 class NativeQueryTest extends TestSuite {
 

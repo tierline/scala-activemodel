@@ -5,9 +5,8 @@ import org.squeryl.PrimitiveTypeMode._
 import org.squeryl.Session
 import com.mchange.v2.c3p0.ComboPooledDataSource
 import com.tierline.scala.activemodel.ActiveModelSchema
-import com.tierline.scala.activemodel.ActiveModelSessionFactory
 
-trait MultiTenantActiveModelSchema extends ActiveModelSchema {
+trait MultitenancyActiveModelSchema extends ActiveModelSchema {
 
   override def create() = {
     throw new IllegalAccessException("マルチテナントスキーマではcreate(tenants:Seq[String]())メソッドを利用してください")
@@ -74,8 +73,8 @@ trait MultiTenantActiveModelSchema extends ActiveModelSchema {
     Session.create(d.getConnection, databaseAdapter.adapter)
   }
 
-  override def init() {
-    ActiveModelSessionFactory.setMultiTenant(this)
-  }
+  //  override def init() {
+  //    OldActiveModelSessionFactory.setMultiTenant(this)
+  //  }
 
 }

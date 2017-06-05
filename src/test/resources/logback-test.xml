@@ -11,7 +11,7 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 	<logger name="ch.qos.logback.classic" level="OFF"/>
-	<logger name="com.tierline.scala.activemodel.domain" level="OFF"/>
+	<logger name="com.tierline.scala.activemodel" level="OFF"/>
 	<logger name="com.mchange.v2" level="OFF"/>
 </configuration>
 

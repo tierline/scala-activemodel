@@ -1,8 +1,9 @@
-package com.tierline.scala.activemodel.domain
+package com.tierline.scala.activemodel
 
-import org.squeryl.PrimitiveTypeMode._
-import com.tierline.scala.activemodel._
+import com.tierline.scala.activemodel.singletenant.domain._
 import com.typesafe.config.ConfigFactory
+import org.squeryl.PrimitiveTypeMode._
+import org.squeryl.Session
 
 
 abstract class Schema(configName: String) extends ActiveModelSchema {
@@ -11,7 +12,7 @@ abstract class Schema(configName: String) extends ActiveModelSchema {
 
   val dbConf = config.getConfig(configName)
 
-  databaseAdapter = H2Concurrent(dbConf)
+  databaseAdapter = H2(dbConf)
 
   val goods = Table[Goods]
 
@@ -22,7 +23,13 @@ abstract class Schema(configName: String) extends ActiveModelSchema {
   val keyValue = Table[KeyValue]
 }
 
-object TestSchema extends Schema("database")
+object TestSchema extends Schema("database") {
+  override def sessionFactory = { () =>
+    Session.create(
+      this.databaseAdapter.dataSource.getConnection,
+      this.databaseAdapter.adapter)
+  }
+}
 
 
 object EnvironmentConfigTestSchema extends ActiveModelSchema {
@@ -34,4 +41,11 @@ object EnvironmentConfigTestSchema extends ActiveModelSchema {
   val cartToGoods = oneToManyRelation(cart, goods).via((c, g) => c.id === g.cartId)
 
   val keyValue = Table[KeyValue]
+
+  override def sessionFactory = { () =>
+    Session.create(
+      this.databaseAdapter.dataSource.getConnection,
+      this.databaseAdapter.adapter)
+  }
+
 }

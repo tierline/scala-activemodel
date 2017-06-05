@@ -1,13 +1,12 @@
-package com.tierline.scala.activemodel.multitenant
+package com.tierline.scala.activemodel.multitenant.separate
 
+import com.tierline.scala.activemodel.multitenant.MultiTenant
+import com.tierline.scala.activemodel.singletenant.domain.{Cart, SeparateTenant}
 import org.scalatest._
-import org.squeryl._
 import org.squeryl.PrimitiveTypeMode._
+import org.squeryl._
 
-import com.tierline.scala.activemodel.Database
-import com.tierline.scala.activemodel.domain._
-
-class MultiTenantModeTest extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
+class SeparateTenantActiveModelTest extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
 
   val tenantKey = "tenant-1"
 
@@ -16,18 +15,18 @@ class MultiTenantModeTest extends FunSuite with BeforeAndAfterAll with BeforeAnd
   var session: Session = _
 
   override def beforeAll {
-    Database.setSchema(CentralSchema, MultiTenantSchema)
-    MultiTenant(Tenant)
+    //    Database.setSchema(SeparateCentralSchema, SeparateTenantSchema)
+    MultiTenant(SeparateTenant)
 
     session = SessionFactory.newSession
     session.bindToCurrentThread
     transaction {
-      CentralSchema.create()
-      tenant = new Tenant(tenantKey).create().multiTenant
-      new Tenant("t-2").save()
-      assert(Tenant.countAll == 2)
-      val tenants = Tenant.all.map { t => t.multiTenant }
-      MultiTenantSchema.create(tenants)
+      SeparateCentralSchema.create()
+      tenant = new SeparateTenant(tenantKey).create().multiTenant
+      new SeparateTenant("t-2").save()
+      assert(SeparateTenant.countAll == 2)
+      val tenants = SeparateTenant.all.map { t => t.multiTenant }
+      SeparateTenantSchema.create(tenants)
     }
     tenant.scope {
       session = SessionFactory.newSession
@@ -37,7 +36,7 @@ class MultiTenantModeTest extends FunSuite with BeforeAndAfterAll with BeforeAnd
   }
 
   override def afterAll {
-    Database.close()
+    //    Database.close()
     session.unbindFromCurrentThread
   }
 

@@ -17,7 +17,7 @@ case class NativeQuery(schema: ActiveModelSchema) extends Logging {
     try {
       func(closeable)
     } finally {
-      closeable.close()
+      closeable.close
     }
   }
 
