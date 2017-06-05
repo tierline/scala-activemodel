@@ -35,7 +35,7 @@ trait ActiveModelTest extends TestSuite {
   }
 
   def debugSql(): Unit = {
-    schema.setLogger("##")
+    schema.setLogger("\n##")
   }
 
   def mainTenant = tenants.head

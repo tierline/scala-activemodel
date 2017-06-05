@@ -11,7 +11,7 @@ trait SharedDatabaseAdapter
     with DeleteAdapter
     with SelectAdapter {
 
-  def tenantIdColumnName = "tenantId"
+  def tenantIdColumnName = Multitenancy.tenantIdColumnName
 
   protected def addHeadTenantParams(tenantId: String, params: Iterable[AnyRef]): Iterable[AnyRef] = {
     val buffer = new ListBuffer[AnyRef]()

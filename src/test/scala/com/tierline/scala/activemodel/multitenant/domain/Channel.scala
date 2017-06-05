@@ -32,7 +32,6 @@ case class Channel(
   var id: Long,
   var name: String) extends ActiveModel {
 
-
   def this() = this(0L, "")
 
   def this(name: String) = this(0L, name)

@@ -10,6 +10,12 @@ import scala.util.DynamicVariable
 
 object Multitenancy {
 
+  private var _tenantColumnName = "tenantId"
+
+  def tenantIdColumnName = _tenantColumnName
+
+  def tenantIdColumnName_=(name: String) = this._tenantColumnName = name
+
   private val EMPTY_TENANT = "EMPTY_TENANT"
 
   private val hookTables = mutable.HashSet[Table[ActiveModel]]()

@@ -21,7 +21,7 @@ trait TestSuite extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
       schema.create()
     }
 
-    showTables()
+    //    showTables()
   }
 
   override def afterAll {
@@ -29,7 +29,7 @@ trait TestSuite extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
       schema.drop()
     }
 
-    showTables()
+    //    showTables()
     session.unbindFromCurrentThread
   }
 
