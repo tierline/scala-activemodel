@@ -1,10 +1,11 @@
 package com.tierline.scala.activemodel.singletenant
 
-import com.tierline.scala.activemodel.TestSuite
+import com.tierline.scala.activemodel.{TestSchema, TestSuite}
 import com.tierline.scala.activemodel.singletenant.domain._
 
 
 class ActiveModelTest extends TestSuite {
+  override val schema = TestSchema
 
   def insert(size: Int) {
     for (i <- 0 until size) new Cart("Note" + i, 1000 * i).save()

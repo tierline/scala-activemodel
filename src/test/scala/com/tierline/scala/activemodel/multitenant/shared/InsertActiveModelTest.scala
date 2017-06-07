@@ -3,7 +3,7 @@ package com.tierline.scala.activemodel.multitenant.shared
 import com.tierline.scala.activemodel.multitenant.MultitenancyException
 import com.tierline.scala.activemodel.multitenant.domain.{Channel, Tenant}
 
-class InsertActiveModelTest extends ActiveModelTest {
+trait InsertActiveModelTest extends ActiveModelTest {
 
   test("save tenant is not multitenancy model") {
     val newTenantId = "aaa"

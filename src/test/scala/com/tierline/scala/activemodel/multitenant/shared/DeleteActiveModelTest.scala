@@ -2,7 +2,7 @@ package com.tierline.scala.activemodel.multitenant.shared
 
 import com.tierline.scala.activemodel.multitenant.domain.{Channel, Tenant}
 
-class DeleteActiveModelTest extends ActiveModelTest {
+trait DeleteActiveModelTest extends ActiveModelTest {
 
   test("delete multitenancy model") {
     val tenant = mainTenant

@@ -9,7 +9,7 @@ import org.squeryl.PrimitiveTypeMode._
 trait TestSuite extends FunSuite with BeforeAndAfterAll with BeforeAndAfter {
 
   var session: Session = _
-  val schema: ActiveModelSchema = TestSchema
+  val schema: ActiveModelSchema
 
   override def beforeAll {
     ActiveModelSessionFactory.concreteFactory = schema.sessionFactory

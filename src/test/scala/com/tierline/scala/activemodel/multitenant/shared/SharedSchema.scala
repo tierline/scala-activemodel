@@ -3,23 +3,27 @@ package com.tierline.scala.activemodel.multitenant.shared
 import com.tierline.scala.activemodel.ActiveModelSchema
 import com.tierline.scala.activemodel.multitenant.domain._
 import com.typesafe.config.ConfigFactory
-import org.squeryl.Session
 import org.squeryl.PrimitiveTypeMode._
 
-object SharedSchema extends ActiveModelSchema {
+object SharedSchema {
+  def comment = currentSchema.comment
+
+  def channel = currentSchema.channel
 
 
-  override def sessionFactory = { () =>
-    Session.create(
-      this.databaseAdapter.dataSource.getConnection,
-      this.databaseAdapter.adapter)
-  }
+  def channelToComment = currentSchema.channelToComment
 
-  val config = ConfigFactory.load("database.conf")
+
+  var currentSchema: SharedSchema = _
+}
+
+trait SharedSchema extends ActiveModelSchema {
+
+  def configName: String
+
+  val config = ConfigFactory.load(configName)
 
   val dbConf = config.getConfig("shared")
-
-  databaseAdapter = H2(dbConf)
 
   val tenant = Table[Tenant]
 
