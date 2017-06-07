@@ -8,9 +8,7 @@ import scala.collection.mutable.ArrayBuffer
 
 trait ActiveModelTest extends TestSuite {
 
-  override val schema: ActiveModelSchema = SharedSchema
-
-  val sharedSchema = SharedSchema
+  val sharedSchema = schema
 
   val numberOfTenant = 5
   val tenants: ArrayBuffer[Tenant] = new ArrayBuffer()

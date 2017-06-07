@@ -1,10 +1,12 @@
 package com.tierline.scala.activemodel.singletenant
 
-import com.tierline.scala.activemodel.TestSuite
+import com.tierline.scala.activemodel.{TestSchema, TestSuite}
 import com.tierline.scala.activemodel.singletenant.domain.{Goods, KeyValue}
 import org.squeryl.PrimitiveTypeMode._
 
 class StringKeyRepositoryTest extends TestSuite {
+
+  override val schema = TestSchema
 
   override def beforeAll = {
     super.beforeAll()

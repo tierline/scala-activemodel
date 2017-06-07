@@ -5,7 +5,7 @@ import com.tierline.scala.activemodel.multitenant.domain.{Channel, Comment, Tena
 import org.squeryl.PrimitiveTypeMode._
 
 
-class SelectActiveModelTest extends ActiveModelTest {
+trait SelectActiveModelTest extends ActiveModelTest {
 
   test("find model") {
     val secondTenantId = "aaa"

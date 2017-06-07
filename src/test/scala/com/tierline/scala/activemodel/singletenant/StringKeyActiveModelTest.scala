@@ -1,11 +1,13 @@
 package com.tierline.scala.activemodel.singletenant
 
-import com.tierline.scala.activemodel.TestSuite
+import com.tierline.scala.activemodel.{TestSchema, TestSuite}
 import com.tierline.scala.activemodel.singletenant.domain.KeyValue
 
 class StringKeyActiveModelTest extends TestSuite {
 
-  override def beforeAll() = {
+  override val schema = TestSchema
+
+  override def beforeAll = {
     super.beforeAll()
     KeyValue.deleteAll()
   }

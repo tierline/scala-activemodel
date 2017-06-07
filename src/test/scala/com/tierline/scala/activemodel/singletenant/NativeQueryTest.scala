@@ -5,6 +5,8 @@ import com.tierline.scala.activemodel.{NativeQuery, TestSchema, TestSuite}
 
 class NativeQueryTest extends TestSuite {
 
+  override val schema = TestSchema
+
   def insert(size: Int) {
     for (i <- 0 until size) new Cart("Note" + i, 1000 * i).save
   }

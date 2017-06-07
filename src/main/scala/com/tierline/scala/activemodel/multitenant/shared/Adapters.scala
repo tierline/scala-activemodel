@@ -7,15 +7,13 @@ case class H2(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.h2.Dri
   val adapter = new H2Adapter
 }
 
-//case class MySql(conf: Config) extends ActiveModelDatabaseAdapter(conf, "com.mysql.jdbc.Driver") {
-//  val adapter = new MySQLAdapter
-//}
+case class MySql(conf: Config) extends ActiveModelDatabaseAdapter(conf, "com.mysql.jdbc.Driver") {
+  val adapter = new MySQLAdapter
+}
 
 //case class MariaDB(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.mariadb.jdbc.Driver") {
 //  val adapter = new MySQLInnoDBAdapter
 //}
-
-
 //
 //case class DB2(conf: Config) extends ActiveModelDatabaseAdapter(conf, "com.ibm.db2.jcc.DB2Driver") {
 //  val adapter = new DB2Adapter
@@ -30,7 +28,6 @@ case class H2(conf: Config) extends ActiveModelDatabaseAdapter(conf, "org.h2.Dri
 //  val adapter = new MSSQLAdapter
 //}
 //
-
 //
 //case class MySqlInnoDB(conf: Config) extends ActiveModelDatabaseAdapter(conf, "com.mysql.jdbc.Driver") {
 //  val adapter = new MySQLInnoDBAdapter

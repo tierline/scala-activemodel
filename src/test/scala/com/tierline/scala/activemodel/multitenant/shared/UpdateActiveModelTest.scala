@@ -2,7 +2,7 @@ package com.tierline.scala.activemodel.multitenant.shared
 
 import com.tierline.scala.activemodel.multitenant.domain.{Channel, Tenant}
 
-class UpdateActiveModelTest extends ActiveModelTest {
+trait UpdateActiveModelTest extends ActiveModelTest {
 
   test("update multitenancy model") {
 
